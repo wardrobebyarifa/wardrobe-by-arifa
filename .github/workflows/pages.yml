@@ -27,24 +27,12 @@ jobs:
       - name: Build website
         run: |
           cat site-parts/part-*.html > index.html
-          mkdir -p images
-          cat \
-            hero-q25/part01.txt \
-            hero-q25/part02.txt \
-            hero-q25/part03.txt \
-            hero-q25/seg01.txt \
-            hero-q25/seg02.txt \
-            hero-q25/seg03.txt \
-            hero-q25/seg04.txt \
-            hero-q25/seg05-1.txt \
-            hero-q25/seg05-2.txt \
-            hero-q25/seg05-3.txt \
-            hero-q25/seg05-4.txt \
-            hero-q25/part05.txt \
-            | base64 --decode > images/bridal-hero.webp
-          test "$(wc -c < images/bridal-hero.webp)" -eq 42152
-          grep -q 'images/bridal-hero.webp' index.html
-          rm -rf hero-q25
+          test -f images/hero-bridal-original.jpg
+          test "$(wc -c < images/hero-bridal-original.jpg)" -gt 100000
+          sed -i 's#images/bridal-hero.webp#images/hero-bridal-original.jpg#g' index.html
+          grep -q 'images/hero-bridal-original.jpg' index.html
+          rm -rf hero-q25 hero-data
+          rm -f images/bridal-hero.webp images/hero-bridal.jpg images/hero-model.jpg images/hero-model.jpg.b64 images/hero-model.part01
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
