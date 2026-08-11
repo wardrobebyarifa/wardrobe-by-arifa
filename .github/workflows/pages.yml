@@ -24,9 +24,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Prepare homepage model image
+      - name: Prepare homepage hero
         run: |
-          base64 --decode images/hero-model.jpg.b64 > images/hero-model.jpg
           python - <<'PY'
           from pathlib import Path
 
@@ -72,7 +71,6 @@ jobs:
 
           path.write_text(html, encoding='utf-8')
           PY
-          rm -f images/hero-model.jpg.b64
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
