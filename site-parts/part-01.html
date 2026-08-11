@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Wardrobe by Arifa — timeless Pakistani fashion. Browse our collection and order directly on WhatsApp.">
+<meta name="theme-color" content="#f6efe7">
+<title>Wardrobe by Arifa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#f8f3ed;
+  --cream-2:#f1e6d9;
+  --paper:#fffdf9;
+  --ink:#28281f;
+  --olive:#4d5126;
+  --olive-dark:#383c1a;
+  --gold:#b79a69;
+  --burgundy:#7d182c;
+  --muted:#746d62;
+  --line:#ded4c8;
+  --white:#fff;
+  --whatsapp:#25D366;
+  --shadow:0 18px 50px rgba(60,45,27,.11);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Manrope",sans-serif;line-height:1.55}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+.wrap{width:min(1220px,calc(100% - 40px));margin:auto}
+
+.topbar{background:#efe3d5;color:#5f564b;font-size:12px;border-bottom:1px solid rgba(183,154,105,.15)}
+.topbar .wrap{min-height:38px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.topbar-note,.topbar-contact{display:flex;align-items:center;gap:8px}
+.topbar-contact{font-weight:700;color:#4f5430}
+.top-icon{font-size:15px}
+
+.site-header{position:sticky;top:0;z-index:40;background:rgba(255,253,249,.96);backdrop-filter:blur(16px);border-bottom:1px solid #ede5dc}
+.nav{min-height:92px;display:grid;grid-template-columns:230px 1fr 170px;align-items:center;gap:30px}
+.brand{display:flex;flex-direction:column;align-items:flex-start;line-height:.9}
+.brand-main{font:600 31px/1 "Cormorant Garamond",serif;letter-spacing:.02em}
+.brand-sub{font:600 17px/1.2 "Cormorant Garamond",serif;letter-spacing:.13em;margin-left:28px;margin-top:5px}
+.brand-rule{width:62px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:7px 0 0 28px}
+.nav-links{display:flex;align-items:center;justify-content:center;gap:34px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.035em}
+.nav-links a{position:relative;padding:12px 0}
+.nav-links a:after{content:"";position:absolute;left:50%;bottom:4px;width:0;height:1px;background:var(--olive);transition:.2s;transform:translateX(-50%)}
+.nav-links a:hover:after{width:100%}
+.nav-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+.nav-pill{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 17px;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:700;background:#fff}
+.nav-pill:hover{border-color:#bdb09e}
+
+.hero{position:relative;background:#e9d8c3;overflow:hidden;min-height:670px}
+.hero-grid{display:grid;grid-template-columns:43% 57%;min-height:670px}

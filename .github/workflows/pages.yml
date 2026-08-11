@@ -23,63 +23,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Prepare homepage hero
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path('index.html')
-          html = path.read_text(encoding='utf-8')
-
-          hero_style = '''<style id="hero-photo-patch">
-          .art{
-            background:linear-gradient(180deg,rgba(43,32,29,.02),rgba(43,32,29,.16)),url('images/hero-model.jpg') center 20%/cover no-repeat!important;
-            box-shadow:0 28px 70px #5c38312c!important;
-          }
-          .art:before{
-            content:""!important;
-            position:absolute!important;
-            inset:0!important;
-            top:0!important;
-            left:0!important;
-            transform:none!important;
-            width:auto!important;
-            height:auto!important;
-            border:0!important;
-            border-radius:0!important;
-            display:block!important;
-            background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.08))!important;
-            pointer-events:none!important;
-          }
-          .art .note{
-            position:relative!important;
-            z-index:2!important;
-            background:rgba(255,255,255,.93)!important;
-            backdrop-filter:blur(10px)!important;
-            box-shadow:0 14px 30px rgba(43,32,29,.12)!important;
-          }
-          </style>'''
-
-          if 'hero-photo-patch' not in html:
-              html = html.replace('</head>', hero_style + '</head>', 1)
-
-          old = '<div class="art"><div class="note"><b>Wardrobe by Arifa</b><span>Elegant, wearable pieces for everyday and special occasions.</span></div></div>'
-          new = '<div class="art" aria-label="Wardrobe by Arifa Sage Mist featured model"><div class="note"><b>Featured look: Sage Mist</b><span>Paper silk co-ord set with minimal detailing and timeless elegance.</span></div></div>'
-          if old in html:
-              html = html.replace(old, new, 1)
-
-          path.write_text(html, encoding='utf-8')
-          PY
-
+      - name: Build homepage
+        run: cat site-parts/part-01.html site-parts/part-02.html site-parts/part-03.html site-parts/part-04.html site-parts/part-05.html > index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
-
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
           path: '.'
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
