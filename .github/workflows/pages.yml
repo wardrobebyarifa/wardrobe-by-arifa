@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Prepare clean product images
+      - name: Prepare correctly matched collection images
         run: |
           python -m pip install --quiet pillow
           python - <<'PY'
@@ -32,35 +32,37 @@ jobs:
           from PIL import Image, ImageOps
 
           items = [
-            # Mandarin collection — 8 colours
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_41 PM (1).png', 'product-images/mandarin/white.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_41 PM (2).png', 'product-images/mandarin/sage-mist.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (3).png', 'product-images/mandarin/dusty-rose.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (4).png', 'product-images/mandarin/electric-blue.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (5).png', 'product-images/mandarin/hot-pink.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (6).png', 'product-images/mandarin/maroon.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_43 PM (7).png', 'product-images/mandarin/mocha-taupe.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_43 PM (8).png', 'product-images/mandarin/charcoal-noir.jpg'),
+            # Chiffon shirt + viscose shalwar — flowing embroidered silhouette
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_41 PM (1).png', 'product-images/chiffon/peach-blossom.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (6).png', 'product-images/chiffon/lilac-dew.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_43 PM (8).png', 'product-images/chiffon/seafoam-glow.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_45 PM (10).png', 'product-images/chiffon/powder-sky.jpg'),
 
-            # Chiffon / Viscose collection — 6 colours
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_44 PM (9).png', 'product-images/chiffon/blush-petal.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_45 PM (10).png', 'product-images/chiffon/mint-breeze.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_50 PM (1).png', 'product-images/chiffon/peach-blossom.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (6).png', 'product-images/chiffon/lilac-dew.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (8).png', 'product-images/chiffon/seafoam-glow.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (10).png', 'product-images/chiffon/powder-sky.jpg'),
+            # Irish Collection 2026 — collared/button-front tunic + lace-trim wide trousers
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_41 PM (2).png', 'product-images/irish/ivory.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (3).png', 'product-images/irish/dusty-blue.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (4).png', 'product-images/irish/charcoal.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (5).png', 'product-images/irish/soft-lilac.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_43 PM (7).png', 'product-images/irish/terracotta.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_44 PM (9).png', 'product-images/irish/olive.jpg'),
 
-            # Irish collection — 6 colours
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_50 PM (2).png', 'product-images/irish/ivory.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (3).png', 'product-images/irish/dusty-blue.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (4).png', 'product-images/irish/charcoal.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (5).png', 'product-images/irish/soft-lilac.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (7).png', 'product-images/irish/terracotta.jpg'),
-            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (9).png', 'product-images/irish/olive.jpg'),
+            # Mandarin Collection — frog-button co-ord + relaxed shalwar
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_50 PM (1).png', 'product-images/mandarin/white.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_50 PM (2).png', 'product-images/mandarin/sage-mist.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (3).png', 'product-images/mandarin/dusty-rose.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (4).png', 'product-images/mandarin/electric-blue.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (5).png', 'product-images/mandarin/hot-pink.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (6).png', 'product-images/mandarin/maroon.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (7).png', 'product-images/mandarin/mocha-taupe.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (8).png', 'product-images/mandarin/charcoal-noir.jpg'),
+
+            # Two extra clean Mandarin styling images used outside the product grid
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (9).png', 'product-images/mandarin/white-alt.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (10).png', 'product-images/mandarin/sage-mist-alt.jpg'),
           ]
 
           if len(items) != 20:
-              raise SystemExit('Expected 20 clean product images')
+              raise SystemExit('Expected 20 clean source images')
 
           for src, dst in items:
               srcp = Path(src)
@@ -69,7 +71,10 @@ jobs:
               out = Path(dst)
               out.parent.mkdir(parents=True, exist_ok=True)
               im = ImageOps.exif_transpose(Image.open(srcp)).convert('RGB')
-              im.save(out, 'JPEG', quality=94, optimize=True, progressive=True)
+              if im.width > 1200:
+                  new_h = round(im.height * 1200 / im.width)
+                  im = im.resize((1200, new_h), Image.Resampling.LANCZOS)
+              im.save(out, 'JPEG', quality=92, optimize=True, progressive=True)
               print(f'{src} -> {dst} {im.size}')
           PY
 
@@ -79,13 +84,16 @@ jobs:
           test -f images/hero-bridal-original.jpg
           test "$(wc -c < images/hero-bridal-original.jpg)" -gt 100000
           test "$(find clean-product-data -maxdepth 1 -name '*.png' | wc -l)" -eq 20
-          test -f product-images/mandarin/dusty-rose.jpg
-          test -f product-images/chiffon/peach-blossom.jpg
-          test -f product-images/irish/ivory.jpg
+          test -f product-images/mandarin/sage-mist-alt.jpg
+          test -f product-images/chiffon/seafoam-glow.jpg
+          test -f product-images/irish/olive.jpg
           grep -q 'PKR 12,500' index.html
-          grep -q 'product-images/mandarin/dusty-rose.jpg' index.html
-          grep -q 'product-images/chiffon/peach-blossom.jpg' index.html
-          grep -q 'product-images/irish/ivory.jpg' index.html
+          grep -q 'Mandarin Collection' index.html
+          grep -q 'Chiffon Shirt & Viscose Shalwar' index.html
+          grep -q 'Irish Collection 2026' index.html
+          grep -q 'product-images/mandarin/sage-mist-alt.jpg' index.html
+          grep -q 'product-images/chiffon/seafoam-glow.jpg' index.html
+          grep -q 'product-images/irish/olive.jpg' index.html
           grep -q 'images/hero-bridal-original.jpg' index.html
 
       - name: Setup Pages
