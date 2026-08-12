@@ -1,0 +1,43 @@
+name: Inspect Instagram carousel media
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect public Instagram posts
+        shell: bash
+        run: |
+          set -e
+          python - <<'PY'
+          import re, json, urllib.request
+          posts = ['Db3st2HjQrc','DbVMAmcjSWU','DbKoPqbDSTs']
+          ua={'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/126 Safari/537.36'}
+          for code in posts:
+              urls=[f'https://www.instagram.com/p/{code}/', f'https://www.instagram.com/p/{code}/embed/captioned/']
+              print('\nPOST', code)
+              for url in urls:
+                  try:
+                      req=urllib.request.Request(url,headers=ua)
+                      data=urllib.request.urlopen(req,timeout=25).read().decode('utf-8','ignore')
+                      print('URL',url,'BYTES',len(data))
+                      og=re.findall(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)',data)
+                      print('OG_IMAGES',len(og), og[:3])
+                      print('SIDECAR', 'edge_sidecar_to_children' in data, 'CAROUSEL_MEDIA' in data)
+                      # Find likely CDN image URLs without dumping full page.
+                      imgs=re.findall(r'https:\\/\\/[^"\\]+?\.(?:jpg|jpeg|webp)[^"\\]*', data)
+                      imgs=[x.replace('\\/','/') for x in imgs]
+                      uniq=[]
+                      for x in imgs:
+                          if x not in uniq: uniq.append(x)
+                      print('CDN_IMAGES', len(uniq))
+                      for i,x in enumerate(uniq[:25],1): print('IMG',i,x[:220])
+                  except Exception as e:
+                      print('ERROR',url,repr(e))
+          PY
