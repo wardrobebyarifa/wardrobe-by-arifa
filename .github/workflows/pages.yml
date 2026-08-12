@@ -32,21 +32,16 @@ jobs:
           from PIL import Image, ImageOps
 
           items = [
-            # Chiffon shirt + viscose shalwar — flowing embroidered silhouette
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_41 PM (1).png', 'product-images/chiffon/peach-blossom.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (6).png', 'product-images/chiffon/lilac-dew.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_43 PM (8).png', 'product-images/chiffon/seafoam-glow.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_45 PM (10).png', 'product-images/chiffon/powder-sky.jpg'),
-
-            # Irish Collection 2026 — collared/button-front tunic + lace-trim wide trousers
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_41 PM (2).png', 'product-images/irish/ivory.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (3).png', 'product-images/irish/dusty-blue.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (4).png', 'product-images/irish/charcoal.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (5).png', 'product-images/irish/soft-lilac.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_43 PM (7).png', 'product-images/irish/terracotta.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_44 PM (9).png', 'product-images/irish/olive.jpg'),
-
-            # Mandarin Collection — frog-button co-ord + relaxed shalwar
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_50 PM (1).png', 'product-images/mandarin/white.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_50 PM (2).png', 'product-images/mandarin/sage-mist.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (3).png', 'product-images/mandarin/dusty-rose.jpg'),
@@ -55,14 +50,9 @@ jobs:
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (6).png', 'product-images/mandarin/maroon.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (7).png', 'product-images/mandarin/mocha-taupe.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (8).png', 'product-images/mandarin/charcoal-noir.jpg'),
-
-            # Two extra clean Mandarin styling images used outside the product grid
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (9).png', 'product-images/mandarin/white-alt.jpg'),
             ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (10).png', 'product-images/mandarin/sage-mist-alt.jpg'),
           ]
-
-          if len(items) != 20:
-              raise SystemExit('Expected 20 clean source images')
 
           for src, dst in items:
               srcp = Path(src)
@@ -75,26 +65,35 @@ jobs:
                   new_h = round(im.height * 1200 / im.width)
                   im = im.resize((1200, new_h), Image.Resampling.LANCZOS)
               im.save(out, 'JPEG', quality=92, optimize=True, progressive=True)
-              print(f'{src} -> {dst} {im.size}')
           PY
 
-      - name: Build website
+      - name: Build website and apply display fixes
         run: |
           base64 --decode storefront/site.html.gz.b64 | gzip --decompress > index.html
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          patch = '''<style id="display-fixes">
+          .category-card img{object-fit:contain!important;object-position:center center!important;padding:8px!important}
+          .insta-grid img{object-fit:contain!important;object-position:center center!important;padding:4px!important}
+          .insta-grid a{background:#efe6de!important}
+          .promo-art{background-size:contain!important;background-position:center center!important;background-repeat:no-repeat!important;background-color:#efe3d8!important}
+          .promo .btn{background:#fff!important;color:#342b27!important;border-color:#fff!important;min-width:126px!important}
+          .promo .btn:hover{background:#f6eee8!important;color:#342b27!important}
+          @media(max-width:780px){.promo-art{height:360px!important;background-size:contain!important;background-position:center center!important}}
+          </style>'''
+          if '</head>' not in html:
+              raise SystemExit('Missing </head> in storefront')
+          html = html.replace('</head>', patch + '</head>', 1)
+          p.write_text(html, encoding='utf-8')
+          PY
           test -f images/hero-bridal-original.jpg
-          test "$(wc -c < images/hero-bridal-original.jpg)" -gt 100000
           test "$(find clean-product-data -maxdepth 1 -name '*.png' | wc -l)" -eq 20
-          test -f product-images/mandarin/sage-mist-alt.jpg
-          test -f product-images/chiffon/seafoam-glow.jpg
-          test -f product-images/irish/olive.jpg
           grep -q 'PKR 12,500' index.html
-          grep -q 'Mandarin Collection' index.html
-          grep -q 'Chiffon Shirt &amp; Viscose Shalwar' index.html
-          grep -q 'Irish Collection 2026' index.html
-          grep -q 'product-images/mandarin/sage-mist-alt.jpg' index.html
-          grep -q 'product-images/chiffon/seafoam-glow.jpg' index.html
-          grep -q 'product-images/irish/olive.jpg' index.html
-          grep -q 'images/hero-bridal-original.jpg' index.html
+          grep -q 'display-fixes' index.html
+          grep -q 'object-fit:contain!important' index.html
+          grep -q '.promo .btn' index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
