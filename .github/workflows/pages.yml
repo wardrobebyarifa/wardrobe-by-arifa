@@ -24,11 +24,61 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Prepare clean product images
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageOps
+
+          items = [
+            # Mandarin collection — 8 colours
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_41 PM (1).png', 'product-images/mandarin/white.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_41 PM (2).png', 'product-images/mandarin/sage-mist.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (3).png', 'product-images/mandarin/dusty-rose.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (4).png', 'product-images/mandarin/electric-blue.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (5).png', 'product-images/mandarin/hot-pink.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_42 PM (6).png', 'product-images/mandarin/maroon.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_43 PM (7).png', 'product-images/mandarin/mocha-taupe.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_43 PM (8).png', 'product-images/mandarin/charcoal-noir.jpg'),
+
+            # Chiffon / Viscose collection — 6 colours
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_44 PM (9).png', 'product-images/chiffon/blush-petal.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_45 PM (10).png', 'product-images/chiffon/mint-breeze.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_50 PM (1).png', 'product-images/chiffon/peach-blossom.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (6).png', 'product-images/chiffon/lilac-dew.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (8).png', 'product-images/chiffon/seafoam-glow.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (10).png', 'product-images/chiffon/powder-sky.jpg'),
+
+            # Irish collection — 6 colours
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_50 PM (2).png', 'product-images/irish/ivory.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (3).png', 'product-images/irish/dusty-blue.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (4).png', 'product-images/irish/charcoal.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_51 PM (5).png', 'product-images/irish/soft-lilac.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (7).png', 'product-images/irish/terracotta.jpg'),
+            ('clean-product-data/ChatGPT Image Aug 12, 2026, 09_26_52 PM (9).png', 'product-images/irish/olive.jpg'),
+          ]
+
+          if len(items) != 20:
+              raise SystemExit('Expected 20 clean product images')
+
+          for src, dst in items:
+              srcp = Path(src)
+              if not srcp.exists():
+                  raise SystemExit(f'Missing clean source image: {src}')
+              out = Path(dst)
+              out.parent.mkdir(parents=True, exist_ok=True)
+              im = ImageOps.exif_transpose(Image.open(srcp)).convert('RGB')
+              im.save(out, 'JPEG', quality=94, optimize=True, progressive=True)
+              print(f'{src} -> {dst} {im.size}')
+          PY
+
       - name: Build website
         run: |
           base64 --decode storefront/site.html.gz.b64 | gzip --decompress > index.html
           test -f images/hero-bridal-original.jpg
           test "$(wc -c < images/hero-bridal-original.jpg)" -gt 100000
+          test "$(find clean-product-data -maxdepth 1 -name '*.png' | wc -l)" -eq 20
           test -f product-images/mandarin/dusty-rose.jpg
           test -f product-images/chiffon/peach-blossom.jpg
           test -f product-images/irish/ivory.jpg
