@@ -85,6 +85,7 @@ jobs:
           </style>'''
           if '</head>' not in html:
               raise SystemExit('Missing </head> in storefront')
+          html = html.replace('FOLLOW @WARDROBE.BY.ARIFA', 'FOLLOW @wardrobebyarifa')
           html = html.replace('</head>', patch + '</head>', 1)
           p.write_text(html, encoding='utf-8')
           PY
@@ -94,6 +95,7 @@ jobs:
           grep -q 'display-fixes' index.html
           grep -q 'object-fit:contain!important' index.html
           grep -q '.promo .btn' index.html
+          grep -q 'FOLLOW @wardrobebyarifa' index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
