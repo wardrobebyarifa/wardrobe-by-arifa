@@ -89,7 +89,7 @@ jobs:
           test -f product-images/irish/olive.jpg
           grep -q 'PKR 12,500' index.html
           grep -q 'Mandarin Collection' index.html
-          grep -q 'Chiffon Shirt & Viscose Shalwar' index.html
+          grep -q 'Chiffon Shirt &amp; Viscose Shalwar' index.html
           grep -q 'Irish Collection 2026' index.html
           grep -q 'product-images/mandarin/sage-mist-alt.jpg' index.html
           grep -q 'product-images/chiffon/seafoam-glow.jpg' index.html
