@@ -26,11 +26,16 @@ jobs:
 
       - name: Build website
         run: |
-          cp storefront/index.html index.html
-          sed -i 's#\.\./images/#images/#g' index.html
+          base64 --decode storefront/site.html.gz.b64 | gzip --decompress > index.html
           test -f images/hero-bridal-original.jpg
           test "$(wc -c < images/hero-bridal-original.jpg)" -gt 100000
-          grep -q 'PKR 14,500' index.html
+          test -f product-images/mandarin/dusty-rose.jpg
+          test -f product-images/chiffon/peach-blossom.jpg
+          test -f product-images/irish/ivory.jpg
+          grep -q 'PKR 12,500' index.html
+          grep -q 'product-images/mandarin/dusty-rose.jpg' index.html
+          grep -q 'product-images/chiffon/peach-blossom.jpg' index.html
+          grep -q 'product-images/irish/ivory.jpg' index.html
           grep -q 'images/hero-bridal-original.jpg' index.html
 
       - name: Setup Pages
