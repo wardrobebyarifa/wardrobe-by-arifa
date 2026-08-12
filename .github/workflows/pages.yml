@@ -67,6 +67,20 @@ jobs:
               im.save(out, 'JPEG', quality=92, optimize=True, progressive=True)
           PY
 
+      - name: Reconstruct Azadi sale hero
+        run: |
+          mkdir -p images
+          cat hero-data/azadi-part-00.b64 \
+              hero-data/azadi-part-01.b64 \
+              hero-data/azadi-part-02.b64 \
+              hero-data/azadi-part-03.b64 \
+              hero-data/azadi-part-04.b64 \
+              hero-data/azadi-part-05.b64 \
+              hero-data/azadi-part-06.b64 \
+              hero-data/azadi-part-07.b64 \
+              | base64 --decode > images/azadi-sale-hero.webp
+          test "$(wc -c < images/azadi-sale-hero.webp)" -eq 34824
+
       - name: Build website and apply display fixes
         run: |
           base64 --decode storefront/site.html.gz.b64 | gzip --decompress > index.html
@@ -74,6 +88,11 @@ jobs:
           from pathlib import Path
           p = Path('index.html')
           html = p.read_text(encoding='utf-8')
+
+          html = html.replace('FOLLOW @WARDROBE.BY.ARIFA', 'FOLLOW @wardrobebyarifa')
+          html = html.replace('images/hero-bridal-original.jpg', 'images/azadi-sale-hero.webp')
+          html = html.replace('Wardrobe by Arifa fashion portrait', 'Wardrobe by Arifa Azadi Sale')
+
           patch = '''<style id="display-fixes">
           .category-card img{object-fit:contain!important;object-position:center center!important;padding:8px!important}
           .insta-grid img{object-fit:contain!important;object-position:center center!important;padding:4px!important}
@@ -81,21 +100,56 @@ jobs:
           .promo-art{background-size:contain!important;background-position:center center!important;background-repeat:no-repeat!important;background-color:#efe3d8!important}
           .promo .btn{background:#fff!important;color:#342b27!important;border-color:#fff!important;min-width:126px!important}
           .promo .btn:hover{background:#f6eee8!important;color:#342b27!important}
-          @media(max-width:780px){.promo-art{height:360px!important;background-size:contain!important;background-position:center center!important}}
+
+          /* Azadi Sale hero: full campaign artwork, blended into the cream storefront. */
+          .hero{
+            min-height:0!important;
+            height:auto!important;
+            padding:0!important;
+            background:#f1e2d6!important;
+            display:block!important;
+            overflow:hidden!important;
+          }
+          .hero-photo{
+            position:relative!important;
+            inset:auto!important;
+            width:100%!important;
+            height:auto!important;
+            max-height:none!important;
+            object-fit:contain!important;
+            object-position:center center!important;
+            display:block!important;
+            background:#f1e2d6!important;
+          }
+          .hero-left,.hero-right{display:none!important}
+
+          @media(max-width:780px){
+            .promo-art{height:360px!important;background-size:contain!important;background-position:center center!important}
+            .hero{min-height:0!important;height:auto!important;padding:0!important}
+            .hero-photo{
+              position:relative!important;
+              inset:auto!important;
+              width:100%!important;
+              height:auto!important;
+              object-fit:contain!important;
+              object-position:center center!important;
+            }
+          }
           </style>'''
+
           if '</head>' not in html:
               raise SystemExit('Missing </head> in storefront')
-          html = html.replace('FOLLOW @WARDROBE.BY.ARIFA', 'FOLLOW @wardrobebyarifa')
           html = html.replace('</head>', patch + '</head>', 1)
           p.write_text(html, encoding='utf-8')
           PY
-          test -f images/hero-bridal-original.jpg
+          test -f images/azadi-sale-hero.webp
+          test "$(wc -c < images/azadi-sale-hero.webp)" -eq 34824
           test "$(find clean-product-data -maxdepth 1 -name '*.png' | wc -l)" -eq 20
           grep -q 'PKR 12,500' index.html
           grep -q 'display-fixes' index.html
-          grep -q 'object-fit:contain!important' index.html
-          grep -q '.promo .btn' index.html
+          grep -q 'images/azadi-sale-hero.webp' index.html
           grep -q 'FOLLOW @wardrobebyarifa' index.html
+          grep -q '.hero-left,.hero-right{display:none!important}' index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
