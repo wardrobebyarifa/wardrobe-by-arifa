@@ -26,13 +26,12 @@ jobs:
 
       - name: Build website
         run: |
-          cat site-parts/part-*.html > index.html
+          cp storefront/index.html index.html
+          sed -i 's#\.\./images/#images/#g' index.html
           test -f images/hero-bridal-original.jpg
           test "$(wc -c < images/hero-bridal-original.jpg)" -gt 100000
-          sed -i 's#images/bridal-hero.webp#images/hero-bridal-original.jpg#g' index.html
+          grep -q 'PKR 14,500' index.html
           grep -q 'images/hero-bridal-original.jpg' index.html
-          rm -rf hero-q25 hero-data
-          rm -f images/bridal-hero.webp images/hero-bridal.jpg images/hero-model.jpg images/hero-model.jpg.b64 images/hero-model.part01
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
